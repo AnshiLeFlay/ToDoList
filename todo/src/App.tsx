@@ -1,26 +1,114 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { CloseOutlined } from "@ant-design/icons";
+import { Layout, Input, theme, Button, Divider, List, Row, Col } from "antd";
+import React, { BaseSyntheticEvent, useEffect, useState } from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import "./App.css";
+import { ADD_NEW_TASK, CHANGE_COMPLETE, DELETE_TASK } from "./services/actions";
+import { useDispatch, useSelector } from "./services/hooks";
+
+const App: React.FC = () => {
+    const [taskText, setTaskText] = useState<string>("");
+    const { Header, Content, Footer } = Layout;
+
+    const tasks = useSelector((store) => store.tasks);
+    const dispatch = useDispatch();
+
+    const {
+        token: { colorBgContainer },
+    } = theme.useToken();
+
+    const handleTaskInput = (e: BaseSyntheticEvent) => {
+        setTaskText(e.target.value);
+    };
+
+    const handleSubmit = () => {
+        if (taskText !== "") {
+            dispatch({ type: ADD_NEW_TASK, caption: taskText });
+            setTaskText("");
+        }
+    };
+
+    useEffect(() => {
+        console.log(tasks);
+    }, [tasks, dispatch]);
+
+    return (
+        <Layout style={{ height: "100%" }}>
+            <Header
+                style={{ position: "sticky", top: 0, zIndex: 1, width: "100%" }}
+            >
+                <div
+                    style={{
+                        float: "left",
+                        width: 120,
+                        height: 31,
+                        margin: "16px 24px 16px 0",
+                        background: "rgba(255, 255, 255, 0.2)",
+                    }}
+                />
+            </Header>
+            <Content className="site-layout" style={{ padding: "0 50px" }}>
+                <div
+                    style={{
+                        padding: 24,
+                        height: "100%",
+                        minHeight: 380,
+                        background: colorBgContainer,
+                    }}
+                >
+                    <Row>
+                        <Col span={18}>
+                        <Input.Group compact>
+                        <Input
+                            style={{ width: "calc(100% - 100px)" }}
+                            onChange={handleTaskInput}
+                            value={taskText}
+                        />
+                        <Button onClick={handleSubmit} type="primary">
+                            Add
+                        </Button>
+                    </Input.Group>
+                        </Col>
+                        <Col span={6}>
+                            Completed: { tasks.filter( task => task.completed === true ).length }
+                            <br />
+                            In progress: { tasks.filter( task => task.completed === false ).length }
+                        </Col>
+                    </Row>
+                    
+                    <Divider />
+                    <List
+                        itemLayout="horizontal"
+                        dataSource={tasks}
+                        renderItem={(item, index) => (
+                            <List.Item
+                                onClick={() => {
+                                    dispatch({
+                                        type: CHANGE_COMPLETE,
+                                        position: index,
+                                    });
+                                }}
+                            >
+                                {item.caption} /{" "}
+                                {tasks[index].completed
+                                    ? "completed"
+                                    : "in progress"}
+                                    <CloseOutlined onClick={() => {
+                                        dispatch({
+                                            type: DELETE_TASK,
+                                            position: index,
+                                        });
+                                    }} />
+                            </List.Item>
+                        )}
+                    />
+                </div>
+            </Content>
+            <Footer style={{ textAlign: "center" }}>
+                Denis Pominov © 2023
+            </Footer>
+        </Layout>
+    );
+};
 
 export default App;

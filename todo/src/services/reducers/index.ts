@@ -35,23 +35,22 @@ export const appReducer = (
             };
         }
         case CHANGE_COMPLETE: {
-            const tasks = state.tasks;
-            if (tasks[action.position].completed)
-                tasks[action.position].completed = false;
-            else tasks[action.position].completed = true;
+            let payload = true;
+            if (state.tasks[action.position].completed) payload = false;
 
             return {
                 ...state,
-                tasks: tasks,
+                tasks: state.tasks.map((task, index) =>
+                    index === action.position
+                        ? { ...task, completed: payload }
+                        : task
+                ),
             };
         }
         case DELETE_TASK: {
-            const tasks = state.tasks;
-            tasks.splice(action.position, 1);
-
             return {
                 ...state,
-                tasks: tasks,
+                tasks: [...state.tasks.slice(0, action.position)],
             };
         }
         default: {
