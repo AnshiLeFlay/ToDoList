@@ -1,6 +1,16 @@
-import { CloseOutlined } from "@ant-design/icons";
-import { Layout, Input, theme, Button, Divider, List, Row, Col } from "antd";
-import React, { BaseSyntheticEvent, useEffect, useState } from "react";
+import { CheckCircleOutlined, CheckOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+    Layout,
+    Input,
+    theme,
+    Button,
+    Divider,
+    List,
+    Row,
+    Col,
+    Statistic,
+} from "antd";
+import React, { BaseSyntheticEvent, useState } from "react";
 
 import "./App.css";
 import { ADD_NEW_TASK, CHANGE_COMPLETE, DELETE_TASK } from "./services/actions";
@@ -28,10 +38,6 @@ const App: React.FC = () => {
         }
     };
 
-    useEffect(() => {
-        console.log(tasks);
-    }, [tasks, dispatch]);
-
     return (
         <Layout style={{ height: "100%" }}>
             <Header
@@ -58,47 +64,76 @@ const App: React.FC = () => {
                 >
                     <Row>
                         <Col span={18}>
-                        <Input.Group compact>
-                        <Input
-                            style={{ width: "calc(100% - 100px)" }}
-                            onChange={handleTaskInput}
-                            value={taskText}
-                        />
-                        <Button onClick={handleSubmit} type="primary">
-                            Add
-                        </Button>
-                    </Input.Group>
+                            <Input.Group compact>
+                                <Input
+                                    style={{ width: "calc(100% - 100px)" }}
+                                    onChange={handleTaskInput}
+                                    value={taskText}
+                                />
+                                <Button onClick={handleSubmit} type="primary">
+                                    Add
+                                </Button>
+                            </Input.Group>
                         </Col>
                         <Col span={6}>
-                            Completed: { tasks.filter( task => task.completed === true ).length }
-                            <br />
-                            In progress: { tasks.filter( task => task.completed === false ).length }
+                            <Row>
+                                <Col span={12}>
+                                    <Statistic
+                                        title="Completed"
+                                        value={
+                                            tasks.filter(
+                                                (task) =>
+                                                    task.completed === true
+                                            ).length
+                                        }
+                                    />
+                                </Col>
+                                <Col span={12}>
+                                    <Statistic
+                                        title="In progress"
+                                        value={
+                                            tasks.filter(
+                                                (task) =>
+                                                    task.completed === false
+                                            ).length
+                                        }
+                                    />
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
-                    
                     <Divider />
                     <List
+                        size="large"
                         itemLayout="horizontal"
                         dataSource={tasks}
                         renderItem={(item, index) => (
                             <List.Item
-                                onClick={() => {
-                                    dispatch({
-                                        type: CHANGE_COMPLETE,
-                                        position: index,
-                                    });
-                                }}
+                                actions={[
+                                    <CheckOutlined 
+                                        onClick={() => {
+                                            dispatch({
+                                                type: CHANGE_COMPLETE,
+                                                position: index,
+                                            });
+                                        }}
+                                    />,
+                                    <DeleteOutlined
+                                        onClick={() => {
+                                            dispatch({
+                                                type: DELETE_TASK,
+                                                position: index,
+                                            });
+                                        }}
+                                    />,
+                                ]}
                             >
-                                {item.caption} /{" "}
-                                {tasks[index].completed
-                                    ? "completed"
-                                    : "in progress"}
-                                    <CloseOutlined onClick={() => {
-                                        dispatch({
-                                            type: DELETE_TASK,
-                                            position: index,
-                                        });
-                                    }} />
+                                <List.Item.Meta
+                                title={item.caption}
+                                    description={
+                                        tasks[index].completed && <div style={{ color: '#7cb305' }}>completed <CheckCircleOutlined /></div>
+                                    }
+                                />
                             </List.Item>
                         )}
                     />

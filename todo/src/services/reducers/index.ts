@@ -36,7 +36,7 @@ export const appReducer = (
         }
         case CHANGE_COMPLETE: {
             let payload = true;
-            if (state.tasks[action.position].completed) payload = false;
+            if (state.tasks[action.position]?.completed) payload = false;
 
             return {
                 ...state,
@@ -50,7 +50,7 @@ export const appReducer = (
         case DELETE_TASK: {
             return {
                 ...state,
-                tasks: [...state.tasks.slice(0, action.position)],
+                tasks: [...state.tasks.filter((v, i) => i !== action.position)],
             };
         }
         default: {
