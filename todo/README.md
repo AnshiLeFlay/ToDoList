@@ -1,46 +1,43 @@
-# Getting Started with Create React App
+# Simple ToDo List
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a simple ToDo List application built using React, Redux, JavaScript/TypeScript, and Ant Design. The project was created using the `create-react-app` tool.
 
-## Available Scripts
+The current version of the application allows users to perform the following actions:
+- Add a task
+- Remove a task
+- Toggle the status of a task
+- Count the number of completed and uncompleted tasks
 
-In the project directory, you can run:
+Future versions of the application will include the following functionality:
+- Filter tasks by task type
+- Allow adding tasks with N characters
 
-### `npm start`
+## Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. Clone the repository
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+2. Navigate to the project directory
 
-### `npm test`
+3. Install dependencies
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+`npm install`
 
-### `npm run build`
+4. Start the development server
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+`npm start`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+5. Open the application in your browser at `http://localhost:3000`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Usage
 
-### `npm run eject`
+To add a new task, simply type the task description in the input field and click the "Add" button.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+To remove a task, click the "Remove icon" button next to the task you want to delete.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+To toggle the status of a task, click the CheckIcon next to the task description.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The application will automatically update the count of completed and uncompleted tasks.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Hexlet
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+This project is a test assignment from the <a href="https://github.com/Hexlet/ru-test-assignments">Hexlet community</a>.
