@@ -1,6 +1,7 @@
 import {
     ADD_NEW_TASK,
     CHANGE_COMPLETE,
+    CHANGE_CURRENT_TASK,
     DELETE_TASK,
     TActions,
 } from "../actions";
@@ -11,13 +12,48 @@ interface ITask {
 }
 
 type TInitialState = {
+    projects: any;
     tasks: Array<ITask> | [];
     n: number;
+    currentTask: number | null;
 };
 
+//структура таски
+
 const initialState: TInitialState = {
+    projects: [
+        [
+            {
+                key: '1',
+                title: 'first task',
+                children: [
+                    {
+                        key: '1-1',
+                        title: 'first first task',
+                        children: []
+                    },
+                ]
+            },
+            {
+                key: '2',
+                title: 'asdasd task',
+                children: []
+            },
+            {
+                key: '3',
+                title: 'fikkkkkkkkkrst task',
+                children: []
+            },
+            {
+                key: '4',
+                title: 'first sdkalsdkals kdlasdklasdtask',
+                children: []
+            },
+        ],
+    ],
     tasks: [],
     n: 15,
+    currentTask: null,
 };
 
 export const appReducer = (
@@ -51,6 +87,12 @@ export const appReducer = (
             return {
                 ...state,
                 tasks: [...state.tasks.filter((v, i) => i !== action.position)],
+            };
+        }
+        case CHANGE_CURRENT_TASK: {
+            return {
+                ...state,
+                currentTask: action.position,
             };
         }
         default: {

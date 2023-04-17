@@ -1,4 +1,8 @@
-import { CheckCircleOutlined, CheckOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+    CheckCircleOutlined,
+    CheckOutlined,
+    DeleteOutlined,
+} from "@ant-design/icons";
 import {
     Layout,
     Input,
@@ -13,14 +17,20 @@ import {
 import React, { BaseSyntheticEvent, useState } from "react";
 
 import "./App.css";
-import { ADD_NEW_TASK, CHANGE_COMPLETE, DELETE_TASK } from "./services/actions";
-import { useDispatch, useSelector } from "./services/hooks";
+import {
+    ADD_NEW_TASK,
+    CHANGE_COMPLETE,
+    CHANGE_CURRENT_TASK,
+    DELETE_TASK,
+} from "../../services/actions";
+import { useDispatch, useSelector } from "../../services/hooks";
 
 const App: React.FC = () => {
     const [taskText, setTaskText] = useState<string>("");
-    const { Header, Content, Footer } = Layout;
+    const { Content, Footer } = Layout;
 
     const tasks = useSelector((store) => store.tasks);
+    const project = useSelector((store) => store.projects?.[0]);
     const dispatch = useDispatch();
 
     const {
@@ -38,21 +48,36 @@ const App: React.FC = () => {
         }
     };
 
+    const handleCurrent = (i: number) => {
+        dispatch({ type: CHANGE_CURRENT_TASK, position: i });
+    };
+
+    const root = Object.keys(project[0]).filter(
+        (task) => !Object.values(project[0]).flat().includes(task)
+    );
+
+    const buildTaskList = (adjList: any, task: any) => {
+        const subtasks = adjList[task] || [];
+
+        if (subtasks.length === 0) {
+            return <li key={task}>{task}</li>;
+        }
+
+        return (
+            <li key={task}>
+                {task}
+                <ul>
+                    {subtasks.map((subtask: any) =>
+                        buildTaskList(adjList, subtask)
+                    )}
+                </ul>
+            </li>
+        );
+    };
+
     return (
         <Layout style={{ height: "100%" }}>
-            <Header
-                style={{ position: "sticky", top: 0, zIndex: 1, width: "100%" }}
-            >
-                <div
-                    style={{
-                        float: "left",
-                        width: 120,
-                        height: 31,
-                        margin: "16px 24px 16px 0",
-                        background: "rgba(255, 255, 255, 0.2)",
-                    }}
-                />
-            </Header>
+            
             <Content className="site-layout" style={{ padding: "0 50px" }}>
                 <div
                     style={{
@@ -109,8 +134,9 @@ const App: React.FC = () => {
                         dataSource={tasks}
                         renderItem={(item, index) => (
                             <List.Item
+                                onClick={() => handleCurrent(index)}
                                 actions={[
-                                    <CheckOutlined 
+                                    <CheckOutlined
                                         onClick={() => {
                                             dispatch({
                                                 type: CHANGE_COMPLETE,
@@ -129,19 +155,26 @@ const App: React.FC = () => {
                                 ]}
                             >
                                 <List.Item.Meta
-                                title={item.caption}
+                                    title={item.caption}
                                     description={
-                                        tasks[index].completed && <div style={{ color: '#7cb305' }}>completed <CheckCircleOutlined /></div>
+                                        tasks[index].completed && (
+                                            <div style={{ color: "#7cb305" }}>
+                                                completed{" "}
+                                                <CheckCircleOutlined />
+                                            </div>
+                                        )
                                     }
                                 />
                             </List.Item>
                         )}
                     />
+                    {root.length > 0 &&
+                        root.map((task: any) =>
+                            buildTaskList(project[0], task)
+                        )}
                 </div>
             </Content>
-            <Footer style={{ textAlign: "center" }}>
-                Denis Pominov © 2023
-            </Footer>
+            
         </Layout>
     );
 };
