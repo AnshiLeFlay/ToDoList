@@ -4,6 +4,7 @@ export const CHANGE_COMPLETE = "CHANGE_COMPLETE";
 export const DELETE_TASK = "DELETE_TASK";
 export const CHANGE_CURRENT_TASK = "CHANGE_CURRENT_TASK";
 export const UPDATE_DATA_TREE = "UPDATE_DATA_TREE";
+export const ADD_TASK_TO_DATA_TREE = "ADD_TASK_TO_DATA_TREE";
 
 //interfaces
 export interface IAddNewTask {
@@ -33,12 +34,20 @@ export interface IUpdateDataTree {
     data: any;
 }
 
+export interface IAddTaskToDataTree {
+    readonly type: typeof ADD_TASK_TO_DATA_TREE;
+    project: number;
+    position: number;
+    data: string;
+}
+
 //types
 export type TActions =
     | IAddNewTask
     | IChangeComplete
     | IDeleteTask
     | IChangeCurrentTask
-    | IUpdateDataTree;
+    | IUpdateDataTree
+    | IAddTaskToDataTree;
 
 //enhancers

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Tree } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
 import { useDispatch, useSelector } from "../../services/hooks";
@@ -9,8 +9,6 @@ import { UPDATE_DATA_TREE } from "../../services/actions";
 const ListTree: React.FC = () => {
     const project = useSelector((store) => store.projects?.[0]);
     const dispatch = useDispatch();
-
-    //const [gData, setGData] = useState(project);
 
     const onDragEnter: TreeProps["onDragEnter"] = (info) => {
         console.log(info);
@@ -40,7 +38,6 @@ const ListTree: React.FC = () => {
         };
         const data = [...project];
 
-        // Find dragObject
         let dragObj: DataNode;
         loop(data, dragKey, (item, index, arr) => {
             arr.splice(index, 1);
@@ -48,23 +45,18 @@ const ListTree: React.FC = () => {
         });
 
         if (!info.dropToGap) {
-            // Drop on the content
             loop(data, dropKey, (item) => {
                 item.children = item.children || [];
-                // where to insert 示例添加到头部，可以是随意位置
                 item.children.unshift(dragObj);
             });
         } else if (
-            ((info.node as any).props.children || []).length > 0 && // Has children
-            (info.node as any).props.expanded && // Is expanded
-            dropPosition === 1 // On the bottom gap
+            ((info.node as any).props.children || []).length > 0 &&
+            (info.node as any).props.expanded &&
+            dropPosition === 1
         ) {
             loop(data, dropKey, (item) => {
                 item.children = item.children || [];
-                // where to insert 示例添加到头部，可以是随意位置
                 item.children.unshift(dragObj);
-                // in previous version, we use item.children.push(dragObj) to insert the
-                // item to the tail of the children
             });
         } else {
             let ar: DataNode[] = [];
@@ -79,8 +71,8 @@ const ListTree: React.FC = () => {
                 ar.splice(i! + 1, 0, dragObj!);
             }
         }
-        //setGData(data);
-        dispatch({type: UPDATE_DATA_TREE, project: 0, data: data});
+
+        dispatch({ type: UPDATE_DATA_TREE, project: 0, data: data });
     };
 
     return (

@@ -1,5 +1,6 @@
 import {
     ADD_NEW_TASK,
+    ADD_TASK_TO_DATA_TREE,
     CHANGE_COMPLETE,
     CHANGE_CURRENT_TASK,
     DELETE_TASK,
@@ -101,6 +102,28 @@ export const appReducer = (
                 ...state,
                 projects: state.projects.map((elem: any, i: number) =>
                     i === action.project ? action.data : elem
+                ),
+            };
+        }
+        case ADD_TASK_TO_DATA_TREE: {
+            console.log('title', action.data);
+            return {
+                ...state,
+                projects: state.projects.map((elem: any, i: number) =>
+                    i === action.project
+                        ? [
+                              ...elem,
+                              {
+                                  key:
+                                      parseInt(state.projects[action.project][
+                                          state.projects[action.project]
+                                              .length - 1
+                                      ].key) + 1,
+                                  title: action.data,
+                                  children: [],
+                              },
+                          ]
+                        : elem
                 ),
             };
         }
