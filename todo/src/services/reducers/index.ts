@@ -4,6 +4,7 @@ import {
     CHANGE_CURRENT_TASK,
     DELETE_TASK,
     TActions,
+    UPDATE_DATA_TREE,
 } from "../actions";
 
 interface ITask {
@@ -24,30 +25,30 @@ const initialState: TInitialState = {
     projects: [
         [
             {
-                key: '1',
-                title: 'first task',
+                key: "1",
+                title: "first task",
                 children: [
                     {
-                        key: '1-1',
-                        title: 'first first task',
-                        children: []
+                        key: "1-1",
+                        title: "first first task",
+                        children: [],
                     },
-                ]
+                ],
             },
             {
-                key: '2',
-                title: 'asdasd task',
-                children: []
+                key: "2",
+                title: "asdasd task",
+                children: [],
             },
             {
-                key: '3',
-                title: 'fikkkkkkkkkrst task',
-                children: []
+                key: "3",
+                title: "fikkkkkkkkkrst task",
+                children: [],
             },
             {
-                key: '4',
-                title: 'first sdkalsdkals kdlasdklasdtask',
-                children: []
+                key: "4",
+                title: "first sdkalsdkals kdlasdklasdtask",
+                children: [],
             },
         ],
     ],
@@ -93,6 +94,14 @@ export const appReducer = (
             return {
                 ...state,
                 currentTask: action.position,
+            };
+        }
+        case UPDATE_DATA_TREE: {
+            return {
+                ...state,
+                projects: state.projects.map((elem: any, i: number) =>
+                    i === action.project ? action.data : elem
+                ),
             };
         }
         default: {

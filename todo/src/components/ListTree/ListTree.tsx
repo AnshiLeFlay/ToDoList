@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { Tree } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
-import { useSelector } from "../../services/hooks";
+import { useDispatch, useSelector } from "../../services/hooks";
+import { UPDATE_DATA_TREE } from "../../services/actions";
 
-const defaultData: DataNode[] = [];
+//const defaultData: DataNode[] = [];
 
 const ListTree: React.FC = () => {
     const project = useSelector((store) => store.projects?.[0]);
+    const dispatch = useDispatch();
 
-    const [gData, setGData] = useState(project);
+    //const [gData, setGData] = useState(project);
 
     const onDragEnter: TreeProps["onDragEnter"] = (info) => {
         console.log(info);
@@ -36,7 +38,7 @@ const ListTree: React.FC = () => {
                 }
             }
         };
-        const data = [...gData];
+        const data = [...project];
 
         // Find dragObject
         let dragObj: DataNode;
@@ -77,7 +79,8 @@ const ListTree: React.FC = () => {
                 ar.splice(i! + 1, 0, dragObj!);
             }
         }
-        setGData(data);
+        //setGData(data);
+        dispatch({type: UPDATE_DATA_TREE, project: 0, data: data});
     };
 
     return (
@@ -88,7 +91,7 @@ const ListTree: React.FC = () => {
             blockNode
             onDragEnter={onDragEnter}
             onDrop={onDrop}
-            treeData={gData}
+            treeData={project}
         />
     );
 };
