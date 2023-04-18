@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Tree } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
 import { useDispatch, useSelector } from "../../services/hooks";
@@ -7,8 +7,21 @@ import { UPDATE_DATA_TREE } from "../../services/actions";
 //const defaultData: DataNode[] = [];
 
 const ListTree: React.FC = () => {
+    const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
+    const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
+    
     const project = useSelector((store) => store.projects?.[0]);
     const dispatch = useDispatch();
+
+    const onCheck = (checkedKeysValue: React.Key[]) => {
+        console.log('onCheck', checkedKeysValue);
+        setCheckedKeys(checkedKeysValue);
+      };
+    
+      const onSelect = (selectedKeysValue: React.Key[], info: any) => {
+        console.log('onSelect', info);
+        setSelectedKeys(selectedKeysValue);
+      };
 
     const onDragEnter: TreeProps["onDragEnter"] = (info) => {
         console.log(info);
@@ -78,9 +91,14 @@ const ListTree: React.FC = () => {
     return (
         <Tree
             className="draggable-tree"
+            checkable
             defaultExpandAll
             draggable
             blockNode
+            onCheck={(checkedVal: any) => onCheck(checkedVal)}
+            checkedKeys={checkedKeys}
+            onSelect={onSelect}
+            selectedKeys={selectedKeys}
             onDragEnter={onDragEnter}
             onDrop={onDrop}
             treeData={project}
